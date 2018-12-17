@@ -23,12 +23,24 @@ function Ball(xcoord, ycoord){
 this.size = 30;
 this.xcoord = xcoord;
 this.ycoord = ycoord;
-this.stepx =2;
-this.stepy =2;
+this.stepRandomx = random(2);
+this.stepRandomy = random(2);
+if (this.stepRandomx >= 1){
+ this.stepx= 2;
+
+}else {
+this.stepx = -2;
+}if (this.stepRandomy >= 1){
+ this.stepy=2;
+
+}else {
+this.stepy = -2;
+}
 this.r = random(255);
 this.g = random(255);
 this.b = random(255);
 this.draw = function () {
+text(this.stepRandom, 10,10);
  fill(this.r,this.g,this.b);
  rect(this.xcoord, this.ycoord, this.size, this.size, this.size);
 
