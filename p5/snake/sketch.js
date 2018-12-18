@@ -8,10 +8,12 @@ function setup() {
   background(230);
   text('I love you Katie', 10, 60);
   fill(0, 102, 153, 51);
-  frameRate(4);
+  frameRate(60);
  snake = new Snake();
   snake.addCell();
   food = new Cell(50,50,null, true);
+  ticksCap = 30;
+  ticks = 0;
 }
 
 function draw() {
@@ -43,33 +45,36 @@ text("hi",10,10);
 function Snake(){
     this.x = 10;
     this.y = 10;
-    this.size = 1;
     this.xDir  = 1;
     this.yDir = 0;
+    this.fed = false;
     this.cells = [];
 
 
 
     this.draw = function(){
     fill(27);
-    text(this.xDir, 5,10);
+    text(this.cells.length, 5,10);
+     if (ticks >= ticksCap){
     this.cells.forEach(cell => {
-            cell.draw();
             cell.move(this.xDir, this.yDir);
         });
+        ticks = 0;
+        this.fed = false;
+    }ticks ++;
 
-        if ((this.cells[0].x == food.x) && (this.cells[0].y == food.y)){
-          this.addCell(this.cells.last);
+    this.cells.forEach(cell => {
+            cell.draw();
+        });
+
+        if (!this.fed  && (this.cells[this.cells.length -1].x == food.x) && (this.cells[this.cells.length - 1].y == food.y)){
+          this.addCell(this.cells[0]);
+          this.fed = true;
         }
     };
      this.addCell = function(leader){
-     if (leader){
-
       let cell = new Cell(this.x, this.y,leader);
-      this.cells.push(cell);
-     }
-      let cell = new Cell(this.x, this.y,leader);
-      this.cells.push(cell);
+      this.cells.unshift(cell);
      };
 
     this.changeDir = function(dir){
@@ -98,25 +103,23 @@ function Cell(x,y,leader, food){
     this.leader = leader;
 
     if (leader){
-    this.x = leader.x + 10;
-    this.y = leader.y + 10;
+      this.x = leader.x;
+      this.y = leader.y;
     }
-
-    text("hi", 2,20);
     this.draw = function() {
         fill(59);
-        text("d cell", 30, 20);
         rect(this.x, this.y, this.size, this.size);
     };
 
     this.move = function(xDir, yDir){
         if (this.leader){
-           this.x = this.leader.x + (xDir * 10);
-           this.y = this.leader.y + (yDir * 10);
+           this.x = this.leader.x;
+           this.y = this.leader.y;
         }
         else {
         this.x += xDir * 10;
         this.y += yDir *10;
         }
-    };
+
+}
 }
