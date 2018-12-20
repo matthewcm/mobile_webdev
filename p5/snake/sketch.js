@@ -128,16 +128,17 @@ function Snake(){
                 this.tail = [];
             }
 
+            this.tail.forEach(cell=>cell.move(this.dir) );
+
+            this.head.move(this.dir);
+
             this.tail.forEach(cell => {
                 if (this.head.x === cell.x && this.head.y === cell.y) {
                     this.head.x = 10;
                     this.head.y = 10;
                     this.tail = [];
-            }
-                cell.move(this.dir);
+                }
             });
-
-            this.head.move(this.dir);
             ticks = 0;
             this.fed = false;
             if (!this.fed  && (this.head.x == food.x) && (this.head.y == food.y)){
