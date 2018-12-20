@@ -4,7 +4,7 @@ let stepx = 2;
 let stepy = 2;
 function setup() {
   // put setup code here
-  createCanvas(400,600);
+  createCanvas(400,550);
   background(230);
   text('I love you Katie', 10, 60);
   fill(0, 102, 153, 51);
@@ -24,6 +24,10 @@ function setup() {
 
 function draw() {
   // put drawing code here
+  // Snake can get killed by a quicj turn
+  // make food get placed on board
+  // speed up game
+  // Add keyboard controls
   fill(20);
   background(230);
 
@@ -32,6 +36,18 @@ function draw() {
   food.draw();
   buttons.draw();
   buttons.checkPressed();
+
+  if (keyIsPressed){
+    if (keyCode === LEFT_ARROW){
+        snake.changeDir("LEFT");
+    }else if (keyCode === RIGHT_ARROW){
+        snake.changeDir("RIGHT");
+    }else if (keyCode === UP_ARROW){
+        snake.changeDir("UP");
+    }else if (keyCode === DOWN_ARROW){
+        snake.changeDir("DOWN");
+    }
+  }
 
 //  text(keyboardDown, 10,10);
 }
@@ -102,30 +118,40 @@ function Snake(){
     this.tail = [];
     this.head = new Cell(this.x, this.y);
 
-
     this.draw = function(){
         fill(27);
         text(this.tail.length, 5,10);
          if (ticks >= ticksCap){
-            this.head.move(this.dir);
+            if ((this.head.x > 390 || this.head.x < 10) || (this.head.y > 390 || this.head.y < 10)) {
+                this.head.x = 10;
+                this.head.y = 10;
+                this.tail = [];
+            }
+
             this.tail.forEach(cell => {
-                if (this.head.x === cell.x && this.head.y === cell.y){
+                if (this.head.x === cell.x && this.head.y === cell.y) {
                     this.head.x = 10;
                     this.head.y = 10;
                     this.tail = [];
-                }
-                cell.move();
+            }
+                cell.move(this.dir);
             });
+
+            this.head.move(this.dir);
             ticks = 0;
             this.fed = false;
             if (!this.fed  && (this.head.x == food.x) && (this.head.y == food.y)){
               if (this.tail[0] == null){
-                this.addCell(this.head);
-                food.randomMove();
+                this.tail.unshift(new Cell(1, 1, this.head));
+              }else{
+                  this.addCell();
+
               }
-              this.addCell(this.tail[0]);
               food.randomMove();
               this.fed = true;
+              if (ticksCap > 5){
+                ticksCap --;
+              }
             }
         }ticks ++;
 
@@ -137,9 +163,8 @@ function Snake(){
     };
 
 
-     this.addCell = function(leader){
-      let cell = new Cell(this.x, this.y,leader);
-      this.tail.unshift(cell);
+     this.addCell = function(){
+      this.tail.unshift(new Cell(this.x, this.y, this.tail[0]));
      };
 
     this.changeDir = function(dir){
@@ -180,8 +205,8 @@ function Cell(x,y,leader, food){
     };
 
     this.randomMove = function() {
-      this.x = Math.floor(Math.random() * 40) * 10;
-      this.y = Math.floor(Math.random() * 40) * 10;
+      this.x = (Math.floor(Math.random() * 38) * 10) + 10;
+      this.y = (Math.floor(Math.random() * 38) * 10) + 10;
     }
 
     this.move = function(dir){
