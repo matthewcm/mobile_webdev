@@ -126,6 +126,7 @@ function Snake(){
                 this.head.x = 10;
                 this.head.y = 10;
                 this.tail = [];
+                this.dir = "RIGHT";
             }
 
             this.tail.forEach(cell=>cell.move(this.dir) );
@@ -137,6 +138,7 @@ function Snake(){
                     this.head.x = 10;
                     this.head.y = 10;
                     this.tail = [];
+                    this.dir = "RIGHT";
                 }
             });
             ticks = 0;
