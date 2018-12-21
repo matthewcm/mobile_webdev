@@ -10,7 +10,10 @@ function setup() {
   fill(0, 102, 153, 51);
   frameRate(60);
   board = new Board();
- snake = new Snake();
+  snake = new Snake();
+  snake.tail.unshift(new Cell(1, 1, snake.head));
+  snake.addCell();
+  snake.addCell();
   food = new Cell(50,50,null, true);
   buttons = new Controls();
   buttons.addButton("LEFT");
@@ -25,9 +28,8 @@ function setup() {
 function draw() {
   // put drawing code here
   // Snake can get killed by a quicj turn
-  // make food get placed on board
+  // because game controls can be quickly changed to allow for impossible move
   // speed up game
-  // Add keyboard controls
   fill(20);
   background(230);
 
@@ -52,7 +54,6 @@ function draw() {
 //  text(keyboardDown, 10,10);
 }
 function Controls(){
-
 this.buttons = [];
 
 this.addButton = function(dir){
@@ -133,8 +134,14 @@ function Snake(){
 
             this.head.move(this.dir);
 
+            this.head.draw();
+        this.tail.forEach(cell => {
+            cell.draw();
+        });
+
             this.tail.forEach(cell => {
                 if (this.head.x === cell.x && this.head.y === cell.y) {
+
                     this.head.x = 10;
                     this.head.y = 10;
                     this.tail = [];
