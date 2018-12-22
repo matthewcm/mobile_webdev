@@ -4,6 +4,11 @@ let stepx = 2;
 let stepy = 2;
 function setup() {
   // put setup code here
+  // splash screen
+  // game over message ( in a function )
+  // refactor draw function in snake
+  // obsticles
+  // extra food
   createCanvas(400,550);
   background(230);
   text('I love you Katie', 10, 60);
@@ -27,8 +32,6 @@ function setup() {
 
 function draw() {
   // put drawing code here
-  // Snake can get killed by a quicj turn
-  // because game controls can be quickly changed to allow for impossible move
   // speed up game
   fill(20);
   background(230);
@@ -38,20 +41,7 @@ function draw() {
   food.draw();
   buttons.draw();
   buttons.checkPressed();
-
-  if (keyIsPressed){
-    if (keyCode === LEFT_ARROW){
-        snake.changeDir("LEFT");
-    }else if (keyCode === RIGHT_ARROW){
-        snake.changeDir("RIGHT");
-    }else if (keyCode === UP_ARROW){
-        snake.changeDir("UP");
-    }else if (keyCode === DOWN_ARROW){
-        snake.changeDir("DOWN");
-    }
-  }
-
-//  text(keyboardDown, 10,10);
+ // place in controls function. refactor name
 }
 function Controls(){
 this.buttons = [];
@@ -70,6 +60,18 @@ this.checkPressed = function(){
        }
          }
      );
+
+  if (keyIsPressed){
+    if (keyCode === LEFT_ARROW){
+        snake.changeDir("LEFT");
+    }else if (keyCode === RIGHT_ARROW){
+        snake.changeDir("RIGHT");
+    }else if (keyCode === UP_ARROW){
+        snake.changeDir("UP");
+    }else if (keyCode === DOWN_ARROW){
+        snake.changeDir("DOWN");
+    }
+  }
      }
  }
 }
@@ -115,6 +117,7 @@ function Snake(){
     this.x = 10;
     this.y = 10;
     this.dir = "RIGHT";
+    this.desiredDir = "RIGHT";
     this.fed = false;
     this.tail = [];
     this.head = new Cell(this.x, this.y);
@@ -123,11 +126,12 @@ function Snake(){
         fill(27);
         text(this.tail.length, 5,10);
          if (ticks >= ticksCap){
+         this.dir = this.desiredDir;
             if ((this.head.x > 390 || this.head.x < 10) || (this.head.y > 390 || this.head.y < 10)) {
                 this.head.x = 10;
                 this.head.y = 10;
                 this.tail = [];
-                this.dir = "RIGHT";
+                this.desiredDir = "RIGHT";
             }
 
             this.tail.forEach(cell=>cell.move(this.dir) );
@@ -179,19 +183,20 @@ function Snake(){
 
     this.changeDir = function(dir){
         if (dir === "UP" && this.dir !== "UP" && this.dir !== "DOWN" ){
-            this.dir = "UP";
+            this.desiredDir = "UP";
         }else if (dir === "DOWN"&& this.dir !== "DOWN" && this.dir !== "UP" ){
-            this.dir = "DOWN";
+            this.desiredDir = "DOWN";
         }else if (dir === "LEFT"&& this.dir !== "LEFT" && this.dir !=="RIGHT" ){
-            this.dir = "LEFT";
+            this.desiredDir = "LEFT";
         }else if (dir === "RIGHT"&& this.dir !== "RIGHT"&& this.dir !== "LEFT" ){
-            this.dir = "RIGHT";
+            this.desiredDir = "RIGHT";
         }
     };
 
 }
 
 function Cell(x,y,leader, food){
+ // moved
     this.x = x;
     this.y = y;
     this.size = 10;
