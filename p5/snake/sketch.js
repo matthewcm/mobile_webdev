@@ -9,6 +9,7 @@ function setup() {
   // refactor draw function in snake
   // obsticles
   // extra food
+  // food ahould have eaten function
   createCanvas(400,550);
   background(230);
   text('I love you Katie', 10, 60);
@@ -19,7 +20,10 @@ function setup() {
   snake.tail.unshift(new Cell(1, 1, snake.head));
   snake.addCell();
   snake.addCell();
+
+
   food = new Cell(50,50,null, true);
+  food2 = new Cell(250,250,null, true);
   buttons = new Controls();
   buttons.addButton("LEFT");
   buttons.addButton("RIGHT");
@@ -39,6 +43,7 @@ function draw() {
   board.draw();
   snake.draw();
   food.draw();
+  food2.draw();
   buttons.draw();
   buttons.checkPressed();
  // place in controls function. refactor name
@@ -208,21 +213,13 @@ function Cell(x,y,leader, food){
       this.y = leader.y;
     }
 
-    if (food) {
-      this.colour = "rbg(0,255,0)";
-    }else {
-      this.colour = "rgb(255,230,0)";
-    }
+    this.colour = "rgb(255,230,0)";
 
     this.draw = function() {
         fill(this.colour);
         rect(this.x, this.y, this.size, this.size);
     };
 
-    this.randomMove = function() {
-      this.x = (Math.floor(Math.random() * 38) * 10) + 10;
-      this.y = (Math.floor(Math.random() * 38) * 10) + 10;
-    }
 
     this.move = function(dir){
         if (this.leader){
@@ -243,3 +240,33 @@ function Cell(x,y,leader, food){
 
 }
 }
+function FieldCell(x,y) {
+    Cell.call(this, x , y);
+
+    this.colour = "rgb(0,0,0)";
+    this.isTouched = function (snakeHead) {
+        if (snakeHead.x === this.x && snakeHead.y === this.y){
+            return true;
+        }
+        return false;
+    }
+}
+function Food(x,y){
+
+FieldCell.call(this, x,y);
+this.colour = "rgb(0,255,0)";
+    this.randomMove = function() {
+      this.x = (Math.floor(Math.random() * 38) * 10) + 10;
+      this.y = (Math.floor(Math.random() * 38) * 10) + 10;
+    }
+}
+
+function Obstacle(x,y){
+FieldCell.call(this, x, y);
+// is touched game over
+
+}
+ function SnakeTailCell(leader){
+ Obstacle.call(this, leader.x, leader.y);
+ // When moved change to leader pos
+ }
