@@ -205,14 +205,6 @@ function Cell(x,y,leader, food){
     this.x = x;
     this.y = y;
     this.size = 10;
-    this.food = food;
-    this.leader = leader;
-
-    if (leader){
-      this.x = leader.x;
-      this.y = leader.y;
-    }
-
     this.colour = "rgb(255,230,0)";
 
     this.draw = function() {
@@ -220,25 +212,6 @@ function Cell(x,y,leader, food){
         rect(this.x, this.y, this.size, this.size);
     };
 
-
-    this.move = function(dir){
-        if (this.leader){
-           this.x = this.leader.x;
-           this.y = this.leader.y;
-        }
-        else {
-            if (dir === "UP"){
-                this.y -= this.size;
-            }else if (dir === "DOWN"){
-                this.y += this.size;
-            }else if (dir === "LEFT"){
-                this.x -= this.size;
-            }else if (dir === "RIGHT"){
-                this.x += this.size;
-            }
-        }
-
-}
 }
 function FieldCell(x,y) {
     Cell.call(this, x , y);
@@ -259,6 +232,14 @@ this.colour = "rgb(0,255,0)";
       this.x = (Math.floor(Math.random() * 38) * 10) + 10;
       this.y = (Math.floor(Math.random() * 38) * 10) + 10;
     }
+
+    this.isEaten = function(snakeHead){
+        if (this.isTouched(snakeHead)){
+            this.randomMove();
+            return true;
+        }
+        return false;
+    }
 }
 
 function Obstacle(x,y){
@@ -268,5 +249,25 @@ FieldCell.call(this, x, y);
 }
  function SnakeTailCell(leader){
  Obstacle.call(this, leader.x, leader.y);
+ this.leader = leader;
+ this.move = function(){
+    this.x = leader.x;
+    this.y = leader.y;
+ }
  // When moved change to leader pos
  }
+ function SnakeHeadCell(x,y){
+ Cell.call(this, x, y);
+ this.move = function(dir){
+            if (dir === "UP"){
+                this.y -= this.size;
+            }else if (dir === "DOWN"){
+                this.y += this.size;
+            }else if (dir === "LEFT"){
+                this.x -= this.size;
+            }else if (dir === "RIGHT"){
+                this.x += this.size;
+            }
+ }
+ }
+
