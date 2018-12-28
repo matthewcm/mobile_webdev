@@ -22,6 +22,10 @@ function setup() {
   food = new Food(50,50);
   food2 = new Food(250,250);
   buttons = new Controls();
+
+  board.addSnake(10,10);
+  board.addFood(30,30);
+
   buttons.addButton("LEFT");
   buttons.addButton("RIGHT");
   buttons.addButton("UP");
@@ -38,9 +42,6 @@ function draw() {
   background(230);
 
   board.draw();
-  snake.draw();
-  food.draw();
-  food2.draw();
   buttons.draw();
   buttons.checkPressed();
   // place in controls function. refactor name
@@ -125,11 +126,15 @@ function Board(){
     this.gameEntities.push(new Obstacle(x,y));
   }
 
+  this.addSnake = function(x,y){
+    snake = new Snake(x,y);
+    this.gameEntities.push(snake);
+  }
 }
 
-function Snake(){
-  this.x = 10;
-  this.y = 10;
+function Snake(x,y){
+  this.x = x;
+  this.y = y;
   this.dir = "RIGHT";
   this.desiredDir = "RIGHT";
   this.fed = false;
@@ -169,7 +174,7 @@ function Snake(){
       ticks = 0;
       this.fed = false;
       if (!this.fed  && (this.head.x == food.x) && (this.head.y == food.y)){
-        this.addCell();  
+        this.addCell();
         food.randomMove();
         this.fed = true;
         if (ticksCap > 5){
