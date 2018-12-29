@@ -19,8 +19,6 @@ function setup() {
   snake = new Snake();
   snake.addCell();
 
-  food = new Food(50,50);
-  food2 = new Food(250,250);
   buttons = new Controls();
 
   board.addSnake(10,10);
@@ -42,6 +40,7 @@ function draw() {
   background(230);
 
   board.draw();
+  board.checkFoods();
   buttons.draw();
   buttons.checkPressed();
   // place in controls function. refactor name
@@ -111,6 +110,7 @@ function Board(){
   this.y = 10;
   this.size = 380;
   this.gameEntities = [];
+  this.foodEntities = [];
   this.draw = function () {
     fill(250);
     rect(this.x, this.y, this.size, this.size);
@@ -123,12 +123,24 @@ function Board(){
   }
 
   this.addFood = function (x, y){
-    this.gameEntities.push(new Obstacle(x,y));
+    let newFood = new Food(x,y);
+    this.gameEntities.push(newFood);
+    this.foodEntities.push(newFood);
   }
 
   this.addSnake = function(x,y){
     snake = new Snake(x,y);
     this.gameEntities.push(snake);
+  }
+  
+  this.checkFoods = function () {
+    this.foodEntities.forEach(food => {
+      if (!snake.fed  && (snake.head.x == food.x) && (snake.head.y == food.y)){
+        snake.addCell();
+        food.randomMove();
+        snake.fed = true;
+      }
+    });
   }
 }
 
@@ -173,14 +185,7 @@ function Snake(x,y){
       });
       ticks = 0;
       this.fed = false;
-      if (!this.fed  && (this.head.x == food.x) && (this.head.y == food.y)){
-        this.addCell();
-        food.randomMove();
-        this.fed = true;
-        if (ticksCap > 5){
-          ticksCap --;
-        }
-      }
+      
     }ticks ++;
 
     this.head.draw();
@@ -242,6 +247,7 @@ function Food(x,y){
   FieldCell.call(this, x,y);
   this.colour = "rgb(0,255,0)";
   this.randomMove = function() {
+    console.log("move time");
     this.x = (Math.floor(Math.random() * 38) * 10) + 10;
     this.y = (Math.floor(Math.random() * 38) * 10) + 10;
   }
@@ -258,8 +264,8 @@ function Food(x,y){
 function Obstacle(x,y){
   FieldCell.call(this, x, y);
   // is touched game over
-
 }
+
 function SnakeTailCell(leader){
   Obstacle.call(this, leader.x, leader.y);
   this.colour = 'rgb(250,150,0)';
