@@ -10,11 +10,13 @@ function setup() {
     // obsticles
     // extra food
     // food ahould have eaten function
+  // food needs to check available coords
     createCanvas(400,550);
     background(230);
     text('I love you Katie', 10, 60);
     fill(0, 102, 153, 51);
-    frameRate(60);
+    frameRate(12);
+    // smooth the game
     board = new Board();
     snake = new Snake();
     snake.addCell();
@@ -176,16 +178,16 @@ function Snake(x,y){
     this.draw = function(){
         fill(27);
         text(this.tail.length, 5,10);
-        if (ticks >= ticksCap){
             this.dir = this.desiredDir;
-            if ((this.head.x > 390 || this.head.x < 10) || (this.head.y > 390 || this.head.y < 10)) {
-                this.die();
-            }
+            
 
             this.tail.forEach(cell=>cell.move() );
 
             this.head.move(this.dir);
+if ((this.head.x >= 390 || this.head.x < 10) || (this.head.y >= 390 || this.head.y < 10)) {
 
+                this.die();
+            }
             this.head.draw();
             this.tail.forEach(cell => {
                 cell.draw();
@@ -196,10 +198,8 @@ function Snake(x,y){
                     this.die();
                 }
             });
-            ticks = 0;
             this.fed = false;
             
-        }ticks ++;
 
         this.head.draw();
         this.tail.forEach(cell => {
