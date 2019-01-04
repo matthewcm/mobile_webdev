@@ -4,14 +4,18 @@ let stepx = 2;
 let stepy = 2;
 function setup() {
   // put setup code here
-  createCanvas(3000,1000);
+  createCanvas(3000,1100);
   background(230);
   fill(0, 102, 153, 51);
   let x = 20;
   let y = 20;
   frameRate(30);
-  arrayy  = new AlgArray([10,41,1,9,3,4,39,18,10,25,35,5,80,60,81,30,4,1,6,45]);
+  arrayy  = new AlgArray();
   arrayy.createRandom();
+  // left_point = 0
+  // right_point = arrayy.length;
+  // step = 1;
+  index = 0;
 
 }
 
@@ -22,12 +26,14 @@ function draw() {
   
   arrayy.draw();
   arrayy.bubbleSortStep();
+  // arrayy.mergeSortStep(step);
+  // step ++;
 
 }
 
-function AlgArray (array) {
+function AlgArray () {
 
-  this.array = [...array];
+  this.array = [];
 
   this.draw = function () {
     let lineX = 20;
@@ -39,8 +45,20 @@ function AlgArray (array) {
 
   this.createRandom = function() {
 
-    for (let i = 0; i < 150; i++){
+    for (let i = 0; i < 50; i++){
       this.array.push(Math.random() * 100);
+    }
+  }
+
+  this.createSorted = function() {
+    for (let i = 0; i < 50; i++){
+      this.array.push(i * 2);
+    }
+  }
+
+  this.createSortedReverse = function () {
+    for (let i = 50; i > 0; i--){
+      this.array.push(i * 2);
     }
   }
 
@@ -64,4 +82,45 @@ function AlgArray (array) {
 
     }
   }
+  
+
+  this.insertionSort = function () {
+    let updated = false;
+    let pindex = index;
+    console.log(this.array);
+    while(!updated && pindex > 0){
+      if(this.array[index] > this.array[pindex - 1]){
+        let temp = this.array[index];
+        this.array[index] = this.array[pindex - 1];
+        this.array[index - 1] = temp;
+      
+        updated = true;
+      }
+      pindex ++;
+    }
+
+      index ++;
+
+  }
+
+  // this.mergeSortStep = function (step) {
+  //  if (step === 1){
+
+  //   for (let i = 0 ; i < this.array.length; i++){
+  //     this.array[i] = [this.array[i]];
+  //   }
+  //   console.log(this.array);
+  //  }
+
+  //   if (step === 2) {
+  //     for (let i = left_point; i < right_point ; i++){
+  //       if (this.array[left_point] <this.array[right_point]){
+
+  //         left_point = 
+  //       }
+  //     }
+  //   }
+
+
+  // }
 }
