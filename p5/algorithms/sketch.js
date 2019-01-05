@@ -103,6 +103,24 @@ function AlgArray () {
 
   }
 
+  this.partition = function (arr, low, high) {
+
+    let x = arr[high];
+    var i = low -1;
+    for (let j = low; j <= high - 1; j++){
+      if (arr[j] <= x){
+        i ++;
+        var temp = arr[i];
+        arr[i] =  arr[j];
+        arr[j] = temp;
+      }
+    }
+  }
+
+  this.quickSort = function () {
+
+  }
+
   // this.mergeSortStep = function (step) {
   //  if (step === 1){
 
