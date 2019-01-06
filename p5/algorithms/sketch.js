@@ -115,30 +115,50 @@ function AlgArray () {
         arr[j] = temp;
       }
     }
+    return i;
   }
 
-  this.quickSort = function () {
+  this.quickSort = function (arr, low, high) {
+
+    // left & right 
+    let pi = this.partition(arr, low,high);
+
+    this.quickSort(arr, low, pi - 1);
+    this.quickSort(arr, pi + 1 , high);
 
   }
 
-  // this.mergeSortStep = function (step) {
-  //  if (step === 1){
+  this.mergeSortStep = function (step) {
+    arr_copy = [];
+    for (let step = 1; step < this.array.length; step ++){
+      for (let i = 0 ; i < this.array.length; i+= 2**step){
+        for (let j = 0; j < 2**step; j++){
 
-  //   for (let i = 0 ; i < this.array.length; i++){
-  //     this.array[i] = [this.array[i]];
-  //   }
-  //   console.log(this.array);
-  //  }
+        arr_copy[i].push(this.array[i+j]);
+        }
+      }
+    }
+    this.array = [...array_copy];
 
-  //   if (step === 2) {
-  //     for (let i = left_point; i < right_point ; i++){
-  //       if (this.array[left_point] <this.array[right_point]){
+      console.log(this.array);
 
-  //         left_point = 
-  //       }
-  //     }
-  //   }
+    }
+
+    for (let pindex = 0; pindex < this.array.length; pindex++){
+      let temp_arr = [];
+      for (let psubindex = 0; psubindex < this.array[pindex]; psubindex ++){
 
 
-  // }
+      }
+    }
+    for (let i = left_point; i < right_point ; i++){
+        if (this.array[left_point] <this.array[right_point]){
+
+          left_point = 
+        }
+      }
+    }
+
+
+  }
 }
