@@ -19,7 +19,7 @@ function draw() {
   ball.move();
    brick.draw();
 
-   brick.hit(ball)
+   brick.hit(ball);
   // also pass size of ball
 
 }
@@ -69,14 +69,14 @@ function Brick (x,y, durability){
  text(attacker.y);
       if (((attacker.x + attacker.size >= this.x  &&
       attacker.x + attacker.size <= this.x + 5 ) ||
-      ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width +5)) &&
+      ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
       (attacker.y <= this.y + this.height && 
       attacker.y  >= this.y)){
         attacker.stepx *= -1;
       }
-       else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height) &&( attacker.y + attacker.size <= this.y))){
-      //   attacker.stepy *= -1;
-      // }
+       else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+        attacker.stepy *= -1;
+       }
     else {
       return -1;
     }
