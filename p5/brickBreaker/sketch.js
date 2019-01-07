@@ -6,10 +6,11 @@ function setup() {
   fill(0, 102, 153, 51);
   frameRate(60);
 
-  ball = new Ball(200,380);
+  ball = new Ball(180,360);
 
   board = new Board();
  board.setup();
+  paddle = new Paddle();
 }
 
 function draw() {
@@ -21,6 +22,10 @@ function draw() {
   ball.move();
 
   board.checkHits();
+
+  paddle.draw();
+  paddle.move();
+  paddle.hit(ball);
   // also pass size of ball
 
 }
@@ -54,6 +59,39 @@ function Board (){
   }
 
 }
+
+function Paddle (){
+  this.x = 160;
+  this.y = 400 - 20;
+  this.width = 80;
+  this.height = 5;
+
+  this.move = function (){
+    if (mouseIsPressed){
+      this.x = mouseX;;
+    }
+  }
+
+
+
+  this.draw = function (){
+    fill (130);
+    rect(this.x, this.y, this.width, this.y);
+  }
+  this.hit = function (attacker){
+
+  if (((attacker.x + attacker.size >= this.x  &&
+      attacker.x + attacker.size <= this.x + 5 ) ||
+      ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
+      (attacker.y <= this.y + this.height && 
+      attacker.y  >= this.y)){
+        attacker.stepx *= -1;
+      }
+       else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+        attacker.stepy *= -1;
+       }
+  }
+}
 function Ball (x,y){
   this.x = x;
   this.y = y;
@@ -64,7 +102,8 @@ function Ball (x,y){
 
   this.move = function(){
     if (this.y >= 400 -this.size){
-      this.stepy *=-1;
+      this.stepy *=1;
+      // Dead ball
     }else if (this.y <= 0){
       this.stepy*=-1;
     }
