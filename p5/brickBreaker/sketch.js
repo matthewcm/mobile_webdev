@@ -7,24 +7,53 @@ function setup() {
   frameRate(60);
 
   ball = new Ball(200,380);
-  brick = new Brick(260,100,1);
 
+  board = new Board();
+ board.setup();
 }
 
 function draw() {
   // put drawing code here
   fill(20);
   background(230);
+   board.draw();
   ball.draw();
   ball.move();
-   brick.draw();
 
-   brick.hit(ball);
+  board.checkHits();
   // also pass size of ball
 
 }
 
+function Board (){
+  this.bricks = []; 
+  this.draw = function(){
+    fill(198);
+    rect(0,0,400,400);
+  }
 
+  this.setup = function (){
+  for(let j =0 ; j < 3 ; j++){
+
+  for(let i = 0; i < 400; i += 50){
+  
+  this.bricks.push( new Brick(i ,j * 20,1));
+  }
+  }
+  }
+  this.draw = function(){
+    this.bricks.forEach(brick => {
+      brick.draw();
+    });
+  }
+
+  this.checkHits = function (){
+    this.bricks.forEach(brick => {
+      brick.hit(ball);
+    });
+  }
+
+}
 function Ball (x,y){
   this.x = x;
   this.y = y;
@@ -52,6 +81,7 @@ function Ball (x,y){
   }
 
   this.draw = function (){
+    fill(55);
     rect(this.x, this.y,this.size,this.size,this.size );
   }
 }
@@ -59,7 +89,7 @@ function Ball (x,y){
 function Brick (x,y, durability){
   this.x = x;
   this.y = y;
-  this.colour = "rgb(0,255,0)";
+        this.colour = "rgb(255,255,0)";
   this.durability = 1;
   this.width = 50;
   this.height = 20;
@@ -81,7 +111,7 @@ function Brick (x,y, durability){
       return -1;
     }
 
-      this.durability *= -1;
+      this.durability --;
         // remove 
 
         if (this.durability === 1){
@@ -92,6 +122,10 @@ function Brick (x,y, durability){
 
         this.colour = "rgb(0,55,255)";
         }
+     if (this.durability === 0){
+       this.x = -100;
+       this.y = -100;
+     }
     }
 
   this.draw = function(){
