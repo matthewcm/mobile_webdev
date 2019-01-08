@@ -95,14 +95,16 @@ function Paddle (){
 function Ball (x,y){
   this.x = x;
   this.y = y;
-  this.stepx = 2;
-  this.stepy = 2;
+  this.stepx = 8;
+  this.stepy = 8;
   this.angle = 135;
   this.size = 10;
 
   this.move = function(){
     if (this.y >= 400 -this.size){
-      this.stepy *=1;
+      this.stepy =-8;
+      this.x = 195;
+      this.y = 370;
       // Dead ball
     }else if (this.y <= 0){
       this.stepy*=-1;
