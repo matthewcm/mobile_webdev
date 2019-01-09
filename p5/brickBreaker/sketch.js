@@ -1,4 +1,10 @@
+// improve collision detect
+//
+// calculate distance between two circle centers.
+// if that answer is smaller than radiuss then collision is made.
+//
 function setup() {
+
   // put setup code here
   createCanvas(400,400);
   background(230);
@@ -78,7 +84,6 @@ function AngleLine (){
     if(this.angle > PI || this.angle < 0){
       this.spinSpeed *= -1;
     }
-    text(this.angle, 20, 320);
 
     let y2 = this.y -( sin(this.angle) * 20);
     let x2 = paddle.middle() - (cos(this.angle) * 20);
