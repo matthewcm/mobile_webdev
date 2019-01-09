@@ -19,7 +19,9 @@ function draw() {
   background(230);
    board.draw();
   ball.draw();
+  // ball.setup();
   ball.move();
+  
 
   board.checkHits();
 
@@ -95,16 +97,19 @@ function Paddle (){
 function Ball (x,y){
   this.x = x;
   this.y = y;
-  this.stepx = 8;
-  this.stepy = 8;
+  this.stepx = 0;
+  this.stepy = 0;
   this.angle = 135;
   this.size = 10;
+  this.start = true;
 
   this.move = function(){
     if (this.y >= 400 -this.size){
-      this.stepy =-8;
+      this.stepy =0;
+      this.stepx = 0;
       this.x = 195;
       this.y = 370;
+      this.start = true;
       // Dead ball
     }else if (this.y <= 0){
       this.stepy*=-1;
@@ -124,6 +129,14 @@ function Ball (x,y){
   this.draw = function (){
     fill(55);
     rect(this.x, this.y,this.size,this.size,this.size );
+    this.setup = function(){
+      
+      if(mouseIsReleased && this.start){
+        this.stepX = 8;
+        this.stepY = 8;
+        this.start = true;
+      }
+    }
   }
 }
 
@@ -174,3 +187,11 @@ function Brick (x,y, durability){
     rect (this.x, this.y, this.width, this.height);
   }
 }
+
+function mouseReleased() {
+  ball.stepy = -8;
+  ball.stepx = 8;
+  return false;
+}
+
+
