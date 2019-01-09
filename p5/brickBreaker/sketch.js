@@ -6,11 +6,11 @@ function setup() {
   fill(0, 102, 153, 51);
   frameRate(60);
 
-  ball = new Ball(180,360);
+  paddle = new Paddle();
+  ball = new Ball();
 
   board = new Board();
- board.setup();
-  paddle = new Paddle();
+  board.setup();
   angleLine = new AngleLine();
 }
 
@@ -18,17 +18,20 @@ function draw() {
   // put drawing code here
   fill(20);
   background(230);
-   board.draw();
+  paddle.draw();
+  paddle.move();
+  board.draw();
   ball.draw();
-  // ball.setup();
+  ball.setup();
   ball.move();
-  
+
 
   board.checkHits();
 
-  paddle.draw();
-  paddle.move();
-  angleLine.draw();
+  if (ball.start){
+    angleLine.draw();
+
+  }
   paddle.hit(ball);
   // also pass size of ball
 
@@ -42,13 +45,13 @@ function Board (){
   }
 
   this.setup = function (){
-  for(let j =0 ; j < 3 ; j++){
+    for(let j =0 ; j < 3 ; j++){
 
-  for(let i = 0; i < 400; i += 50){
-  
-  this.bricks.push( new Brick(i ,j * 20,1));
-  }
-  }
+      for(let i = 0; i < 400; i += 50){
+
+        this.bricks.push( new Brick(i ,j * 20,1));
+      }
+    }
   }
   this.draw = function(){
     text("new ball: "+ ball.start, 20, 350);
@@ -66,15 +69,21 @@ function Board (){
 }
 
 function AngleLine (){
-  this.x = 200;
   this.y = 380;
-  this.angle = 90;
-  
+  this.angle = PI / 2;
+  this.spinSpeed = 0.055;
+
   this.draw = function (){
-    let y2 = this.y - sin(this.angle) * 20;
-    let x2 = this.x - cos(this.angle) * 20;
-      //sohcahtoa
-    line(this.x, this.y, x2, y2);
+    this.angle += this.spinSpeed;;
+    if(this.angle > PI || this.angle < 0){
+      this.spinSpeed *= -1;
+    }
+    text(this.angle, 20, 320);
+
+    let y2 = this.y -( sin(this.angle) * 20);
+    let x2 = paddle.middle() - (cos(this.angle) * 20);
+    //sohcahtoa
+    line(paddle.middle(), this.y, x2, y2);
   }
 }
 
@@ -90,6 +99,10 @@ function Paddle (){
     }
   }
 
+  this.middle = function (){
+    return (this.x + (this.width / 2));
+  }
+
 
 
   this.draw = function (){
@@ -98,21 +111,21 @@ function Paddle (){
   }
   this.hit = function (attacker){
 
-  if (((attacker.x + attacker.size >= this.x  &&
+    if (((attacker.x + attacker.size >= this.x  &&
       attacker.x + attacker.size <= this.x + 5 ) ||
       ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
       (attacker.y <= this.y + this.height && 
-      attacker.y  >= this.y)){
-        attacker.stepx *= -1;
-      }
-       else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
-        attacker.stepy *= -1;
-       }
+        attacker.y  >= this.y)){
+      attacker.stepx *= -1;
+    }
+    else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+      attacker.stepy *= -1;
+    }
   }
 }
-function Ball (x,y){
-  this.x = x;
-  this.y = y;
+function Ball (){
+  this.x = paddle.middle();
+  this.y = paddle.y - 10;
   this.stepx = 0;
   this.stepy = 0;
   this.angle = 135;
@@ -145,57 +158,56 @@ function Ball (x,y){
   this.draw = function (){
     fill(55);
     rect(this.x, this.y,this.size,this.size,this.size );
+  }
     this.setup = function(){
-      
-      if(mouseIsReleased && this.start === true){
-        this.stepX = 8;
-        this.stepY = 8;
+
+      if( this.start){
+        this.x = paddle.middle() - 5;
       }
     }
-  }
+  
 }
 
 function Brick (x,y, durability){
   this.x = x;
   this.y = y;
-        this.colour = "rgb(255,255,0)";
+  this.colour = "rgb(255,255,0)";
   this.durability = 1;
   this.width = 50;
   this.height = 20;
 
   this.hit = function(attacker){
- // left
- text(attacker.y);
-      if (((attacker.x + attacker.size >= this.x  &&
+    // left
+    if (((attacker.x + attacker.size >= this.x  &&
       attacker.x + attacker.size <= this.x + 5 ) ||
       ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
       (attacker.y <= this.y + this.height && 
-      attacker.y  >= this.y)){
-        attacker.stepx *= -1;
-      }
-       else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
-        attacker.stepy *= -1;
-       }
+        attacker.y  >= this.y)){
+      attacker.stepx *= -1;
+    }
+    else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+      attacker.stepy *= -1;
+    }
     else {
       return -1;
     }
 
-      this.durability --;
-        // remove 
+    this.durability --;
+    // remove 
 
-        if (this.durability === 1){
+    if (this.durability === 1){
 
-        this.colour = "rgb(255,255,0)";
-        }
-        else{
-
-        this.colour = "rgb(0,55,255)";
-        }
-     if (this.durability === 0){
-       this.x = -100;
-       this.y = -100;
-     }
+      this.colour = "rgb(255,255,0)";
     }
+    else{
+
+      this.colour = "rgb(0,55,255)";
+    }
+    if (this.durability === 0){
+      this.x = -100;
+      this.y = -100;
+    }
+  }
 
   this.draw = function(){
     fill(this.colour);
@@ -207,10 +219,10 @@ function mouseReleased() {
   if (ball.start){
     ball.stepy = - sin(angleLine.angle) * 6;
     ball.stepx = -cos(angleLine.angle) * 6;
-        ball.start = false;
+    ball.start = false;
 
   }
-   return false;
+  return false;
 }
 
 
