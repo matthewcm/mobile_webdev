@@ -49,6 +49,7 @@ function Board (){
   }
   }
   this.draw = function(){
+    text("new ball: "+ ball.start, 20, 350);
     this.bricks.forEach(brick => {
       brick.draw();
     });
@@ -60,6 +61,11 @@ function Board (){
     });
   }
 
+}
+
+function AngleLine (){
+  this.x = 200;
+  this.y = 380;
 }
 
 function Paddle (){
@@ -131,10 +137,9 @@ function Ball (x,y){
     rect(this.x, this.y,this.size,this.size,this.size );
     this.setup = function(){
       
-      if(mouseIsReleased && this.start){
+      if(mouseIsReleased && this.start === true){
         this.stepX = 8;
         this.stepY = 8;
-        this.start = true;
       }
     }
   }
@@ -189,9 +194,13 @@ function Brick (x,y, durability){
 }
 
 function mouseReleased() {
-  ball.stepy = -8;
+  if (ball.start){
+ ball.stepy = -8;
   ball.stepx = 8;
-  return false;
+        ball.start = false;
+
+  }
+   return false;
 }
 
 
