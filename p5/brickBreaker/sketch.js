@@ -11,6 +11,7 @@ function setup() {
   board = new Board();
  board.setup();
   paddle = new Paddle();
+  angleLine = new AngleLine();
 }
 
 function draw() {
@@ -27,6 +28,7 @@ function draw() {
 
   paddle.draw();
   paddle.move();
+  angleLine.draw();
   paddle.hit(ball);
   // also pass size of ball
 
@@ -66,6 +68,14 @@ function Board (){
 function AngleLine (){
   this.x = 200;
   this.y = 380;
+  this.angle = 90;
+  
+  this.draw = function (){
+    let y2 = this.y - sin(this.angle) * 20;
+    let x2 = this.x - cos(this.angle) * 20;
+      //sohcahtoa
+    line(this.x, this.y, x2, y2);
+  }
 }
 
 function Paddle (){
@@ -195,8 +205,8 @@ function Brick (x,y, durability){
 
 function mouseReleased() {
   if (ball.start){
- ball.stepy = -8;
-  ball.stepx = 8;
+    ball.stepy = - sin(angleLine.angle) * 6;
+    ball.stepx = -cos(angleLine.angle) * 6;
         ball.start = false;
 
   }
