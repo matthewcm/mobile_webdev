@@ -95,7 +95,7 @@ function Paddle (){
 
   this.move = function (){
     if (mouseIsPressed){
-      this.x = mouseX;;
+      this.x = mouseX;
     }
   }
 
@@ -107,18 +107,11 @@ function Paddle (){
 
   this.draw = function (){
     fill (130);
-    rect(this.x, this.y, this.width, this.y);
+    rect(this.x, this.y, this.width, this.y, this.width);
   }
   this.hit = function (attacker){
 
-    if (((attacker.x + attacker.size >= this.x  &&
-      attacker.x + attacker.size <= this.x + 5 ) ||
-      ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
-      (attacker.y <= this.y + this.height && 
-        attacker.y  >= this.y)){
-      attacker.stepx *= -1;
-    }
-    else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+     if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
       attacker.stepy *= -1;
     }
   }
