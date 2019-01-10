@@ -121,14 +121,19 @@ function Paddle (){
     let x_dist = abs(attacker.x - this.x);
     let y_dist = abs(attacker.y - this.y);
 
+    let mag = (attacker.x - this.x)/x_dist;
+
     let dist = sqrt(pow(x_dist , 2) + pow(y_dist ,2));
 
     let c_dist = this.width + attacker.size;
 
+    text(dist, 20, 270);
+    text(c_dist , 20, 280);
+
     // if dist is greater than cdist. there is collision
     // calc angle of rebound
-    if (dist >= c_dist){
-      attacker.angle = atan(y_dist/x_dist);
+    if (dist <= c_dist){
+      attacker.bounce(atan(y_dist/x_dist), mag);
     }
   }
 
@@ -161,9 +166,9 @@ function Ball (){
     this.y+= this.stepy;
     this.x+=this.stepx;
   }
-  this.bounce = function(angle){
+  this.bounce = function(angle, mag){
     this.stepy = - sin(angle) * 6;
-    this.stepx = -cos(angle) * 6;
+    this.stepx = mag * cos(angle) * 6;
   }
 
   this.draw = function (){
