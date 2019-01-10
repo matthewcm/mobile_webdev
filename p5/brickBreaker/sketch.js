@@ -10,7 +10,9 @@ function setup() {
   background(230);
   text('I love you Katie', 10, 60);
   fill(0, 102, 153, 51);
+  ellipseMode(RADIUS);
   frameRate(60);
+  
 
   paddle = new Paddle();
   ball = new Ball();
@@ -154,6 +156,7 @@ function Ball (){
   }
 
   this.draw = function (){
+
     fill(55);
     rect(this.x, this.y,this.size,this.size,this.size );
   }
