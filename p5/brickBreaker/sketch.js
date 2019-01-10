@@ -95,8 +95,8 @@ function AngleLine (){
 }
 
 function Paddle (){
-  this.x = 160;
-  this.y = 400 - 20;
+  this.x = 200;
+  this.y = 460 ;
   this.width = 80;
   this.height = 5;
 
@@ -107,29 +107,35 @@ function Paddle (){
   }
 
   this.middle = function (){
-    return (this.x + (this.width / 2));
+    return (this.x );
   }
 
 
 
   this.draw = function (){
     fill (130);
-    rect(this.x, this.y, this.width, this.y, this.width);
+    ellipse(this.x, this.y, this.width, this.width);
   }
   this.hit = function (attacker){
 
-     if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+    let x_dist = abs(attacker.x - this.x);
+    let y_dist = abs(attacker.y - this.y);
+
+    let dist = sqrt(pow(x_dist , 2) + pow(y_dist ,2));
+
+    let c_dist = this.width + attacker.size;
+    if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
       attacker.stepy *= -1;
     }
   }
 }
 function Ball (){
   this.x = paddle.middle();
-  this.y = paddle.y - 10;
+  this.y = paddle.y - 5;
   this.stepx = 0;
   this.stepy = 0;
   this.angle = 135;
-  this.size = 10;
+  this.size = 5;
   this.start = true;
 
   this.move = function(){
@@ -158,12 +164,12 @@ function Ball (){
   this.draw = function (){
 
     fill(55);
-    rect(this.x, this.y,this.size,this.size,this.size );
+    ellipse(this.x, this.y,this.size,this.size);
   }
     this.setup = function(){
 
       if( this.start){
-        this.x = paddle.middle() - 5;
+        this.x = paddle.middle() ;
       }
     }
   
@@ -178,6 +184,7 @@ function Brick (x,y, durability){
   this.height = 20;
 
   this.hit = function(attacker){
+
     // left
     if (((attacker.x + attacker.size >= this.x  &&
       attacker.x + attacker.size <= this.x + 5 ) ||
