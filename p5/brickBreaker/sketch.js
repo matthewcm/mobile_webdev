@@ -196,24 +196,28 @@ function Brick (x,y, durability){
   this.height = 20;
 
   this.hit = function(attacker){
+  
+    let c_dist = attacker.size;
+    // left 
+    let in_left = abs(attacker.x - this.x) <= c_dist;
+    let in_right = abs(attacker.x - (this.x + this.width)) <= c_dist;
+    let in_top = abs(attacker.y - this.y) <= c_dist;
+    let in_bottom = abs(attacker.y  - (this.y + this.height)) <= c_dist;
 
-    // left
-    if (((attacker.x + attacker.size >= this.x  &&
-      attacker.x + attacker.size <= this.x + 5 ) ||
-      ( attacker.x <= this.x + this.width && attacker.x >= this.x + this.width - 5)) &&
-      (attacker.y <= this.y + this.height && 
-        attacker.y  >= this.y)){
-      attacker.stepx *= -1;
-    }
-    else if (attacker.x + attacker.size >= this.x  && attacker.x <= this.x + this.width &&(( attacker.y >= this.y + this.height - 5 && attacker.y <= this.y + this.height) || ( attacker.y + attacker.size >= this.y&& attacker.y + attacker.size <= this.y + 5))){
+    let in_width = attacker.x > this.x && attacker.x < this.x + this.width;
+    let in_height = attacker.y > this.y && attacker.y < this.y + this.height;
+
+
+
+    if ((in_bottom || in_top)  && (in_width)) {
       attacker.stepy *= -1;
-    }
-    else {
-      return -1;
-    }
-
     this.durability --;
-    // remove 
+    }
+    else if ((in_left|| in_right) && (in_height)){
+      attacker.stepy *= -1;
+    this.durability --;
+    }
+    
 
     if (this.durability === 1){
 
