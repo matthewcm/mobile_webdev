@@ -64,9 +64,9 @@ function Board (){
       return;
     }
     // level one
-    for(let j =0 ; j < 3 ; j++){
+    for(let j =1 ; j < 4 ; j++){
 
-      for(let i = 0; i < 100; i += 50){
+      for(let i = 50; i < 350; i += 50){
 
         this.bricks.push( new Brick(i ,j * 20,this.level));
       }
@@ -249,7 +249,7 @@ function Brick (x,y, durability){
     this.durability --;
     }
     else if ((in_left|| in_right) && (in_height)){
-      attacker.stepy *= -1;
+      attacker.stepx *= -1;
       attacker.speed += 0.02;
     this.durability --;
     }
