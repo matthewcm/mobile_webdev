@@ -43,9 +43,14 @@ function draw() {
   paddle.hit(ball);
   // also pass size of ball
 
+  board.checkComplete();
+
 }
 
 function Board (){
+   // levels
+
+  this.level = 1;
   this.bricks = []; 
   this.draw = function(){
     fill(198);
@@ -53,11 +58,12 @@ function Board (){
   }
 
   this.setup = function (){
+    // level one
     for(let j =0 ; j < 3 ; j++){
 
-      for(let i = 0; i < 400; i += 50){
+      for(let i = 0; i < 100; i += 50){
 
-        this.bricks.push( new Brick(i ,j * 20,1));
+        this.bricks.push( new Brick(i ,j * 20,this.level));
       }
     }
   }
@@ -66,6 +72,14 @@ function Board (){
     this.bricks.forEach(brick => {
       brick.draw();
     });
+  }
+
+  this.checkComplete = function(){
+    if(this.bricks.length === 0){
+      this.level ++;
+      this.setup();
+    }
+    text(this.bricks.length,20,220);
   }
 
   this.checkHits = function (){
@@ -127,9 +141,6 @@ function Paddle (){
 
     let c_dist = this.width + attacker.size;
 
-    text(dist, 20, 270);
-    text(c_dist , 20, 280);
-
     // if dist is greater than cdist. there is collision
     // calc angle of rebound
     if (dist <= c_dist){
@@ -173,7 +184,6 @@ function Ball (){
 
   this.draw = function (){
 
-    text(ball.angle , 20, 250);
     fill(55);
     ellipse(this.x, this.y,this.size,this.size);
   }
@@ -191,7 +201,7 @@ function Brick (x,y, durability){
   this.x = x;
   this.y = y;
   this.colour = "rgb(255,255,0)";
-  this.durability = 1;
+  this.durability = durability;
   this.width = 50;
   this.height = 20;
 
@@ -219,24 +229,53 @@ function Brick (x,y, durability){
     }
     
 
-    if (this.durability === 1){
-
-      this.colour = "rgb(255,255,0)";
-    }
-    else{
-
-      this.colour = "rgb(0,55,255)";
-    }
+    
     if (this.durability === 0){
-      this.x = -100;
-      this.y = -100;
+      board.bricks.splice(board.bricks.indexOf(this), 1);
     }
   }
 
   this.draw = function(){
+    switch (this.durability){
+      case 1: 
+      this.colour = "rgb(255,255,0)";
+        break;
+      case 2:
+
+      this.colour = "rgb(0,55,255)";
+        break;
+      case 3:
+      this.colour = "rgb(255,55,255)";
+
+        break;
+      case 4:
+      this.colour = "rgb(55,55,255)";
+        break;
+      case 5:
+      this.colour = "rgb(0,55,55)";
+        break;
+
+    }
+
+    if (this.durability === 1){
+
+    }
+    else{
+
+    }
     fill(this.colour);
     rect (this.x, this.y, this.width, this.height);
   }
+}
+function Powerup(){
+
+  // falling object (triangle)
+  // coloured
+  // increase paddle size for a duration
+  // increase speed of ball
+  // add more balls to game (challenge)
+  // increase size of ball (larger collision radius)
+  // Random chance of occuring after brick breack
 }
 
 function mouseReleased() {
