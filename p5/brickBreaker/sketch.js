@@ -59,6 +59,10 @@ function Board (){
   }
 
   this.setup = function (){
+    if (this.level === 0){
+      this.bricks = [];
+      return;
+    }
     // level one
     for(let j =0 ; j < 3 ; j++){
 
@@ -71,7 +75,7 @@ function Board (){
   this.draw = function(){
     if (this.level === 0){
       textSize(30);
-      text ("GAME OVER", 150, 200);
+      text ("GAME OVER", 130, 200);
     }
     this.bricks.forEach(brick => {
       brick.draw();
@@ -79,6 +83,8 @@ function Board (){
   }
 
   this.checkComplete = function(){
+    if (this.level >0){
+
     if(this.bricks.length === 0){
       this.level ++;
       this.lives ++;
@@ -87,10 +93,12 @@ function Board (){
     if (this.lives === 0){
       this.level = 0;
       this.setup();
+      paddle.y = - 100;
 
     }
     textSize(20);
     text("Lives: "+this.lives,20,240);
+    }
   }
 
   this.checkHits = function (){
@@ -112,10 +120,10 @@ function AngleLine (){
       this.spinSpeed *= -1;
     }
 
-    let y2 = this.y -( sin(this.angle) * 20);
+    let y2 = paddle.y - paddle.width -( sin(this.angle) * 20);
     let x2 = paddle.middle() - (cos(this.angle) * 20);
     //sohcahtoa
-    line(paddle.middle(), this.y, x2, y2);
+    line(paddle.middle(), paddle.y - paddle.width, x2, y2);
   }
 }
 
@@ -162,7 +170,7 @@ function Paddle (){
 }
 function Ball (){
   this.x = paddle.middle();
-  this.y = 370;
+  this.y = paddle.y - paddle.width - 10;
   this.stepx = 0;
   this.stepy = 0;
   this.speed = 8;
@@ -206,6 +214,7 @@ function Ball (){
 
       if( this.start){
         this.x = paddle.middle() ;
+        this.y = paddle.y - paddle.width - 10;
       }
     }
 
