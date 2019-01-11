@@ -26,6 +26,7 @@ function draw() {
   // put drawing code here
   fill(20);
   background(230);
+  textSize(15);
   paddle.draw();
   paddle.move();
   board.draw();
@@ -49,7 +50,7 @@ function draw() {
 
 function Board (){
    // levels
-
+  this.lives = 3;
   this.level = 1;
   this.bricks = []; 
   this.draw = function(){
@@ -68,7 +69,10 @@ function Board (){
     }
   }
   this.draw = function(){
-    text("new ball: "+ ball.start, 20, 350);
+    if (this.level === 0){
+      textSize(30);
+      text ("GAME OVER", 150, 200);
+    }
     this.bricks.forEach(brick => {
       brick.draw();
     });
@@ -77,9 +81,16 @@ function Board (){
   this.checkComplete = function(){
     if(this.bricks.length === 0){
       this.level ++;
+      this.lives ++;
       this.setup();
     }
-    text(this.bricks.length,20,220);
+    if (this.lives === 0){
+      this.level = 0;
+      this.setup();
+
+    }
+    textSize(20);
+    text("Lives: "+this.lives,20,240);
   }
 
   this.checkHits = function (){
@@ -151,9 +162,10 @@ function Paddle (){
 }
 function Ball (){
   this.x = paddle.middle();
-  this.y = paddle.y - 5;
+  this.y = 370;
   this.stepx = 0;
   this.stepy = 0;
+  this.speed = 8;
   this.angle = 135;
   this.size = 5;
   this.start = true;
@@ -163,6 +175,9 @@ function Ball (){
       this.stepy =0;
       this.stepx = 0;
       this.x = 195;
+
+      this.speed = 8;
+      board.lives --;
       this.y = 370;
       this.start = true;
       // Dead ball
@@ -178,8 +193,8 @@ function Ball (){
     this.x+=this.stepx;
   }
   this.bounce = function(angle, mag){
-    this.stepy = - sin(angle) * 6;
-    this.stepx = mag * cos(angle) * 6;
+    this.stepy = - sin(angle) * this.speed;
+    this.stepx = mag * cos(angle) * this.speed;
   }
 
   this.draw = function (){
@@ -221,10 +236,12 @@ function Brick (x,y, durability){
 
     if ((in_bottom || in_top)  && (in_width)) {
       attacker.stepy *= -1;
+      attacker.speed += 0.02;
     this.durability --;
     }
     else if ((in_left|| in_right) && (in_height)){
       attacker.stepy *= -1;
+      attacker.speed += 0.02;
     this.durability --;
     }
     
@@ -280,8 +297,8 @@ function Powerup(){
 
 function mouseReleased() {
   if (ball.start){
-    ball.stepy = - sin(angleLine.angle) * 6;
-    ball.stepx = -cos(angleLine.angle) * 6;
+    ball.stepy = - sin(angleLine.angle) * ball.speed;
+    ball.stepx = -cos(angleLine.angle) * ball.speed;
     ball.start = false;
 
   }
