@@ -53,6 +53,7 @@ function Board (){
   this.lives = 3;
   this.level = 1;
   this.bricks = []; 
+  this.powerUps = [];
   this.draw = function(){
     fill(198);
     rect(0,0,400,400);
@@ -80,6 +81,11 @@ function Board (){
     this.bricks.forEach(brick => {
       brick.draw();
     });
+
+    this.powerUps.forEach(power => {
+      power.drop();
+      power.draw();
+    })
   }
 
   this.checkComplete = function(){
@@ -105,6 +111,13 @@ function Board (){
     this.bricks.forEach(brick => {
       brick.hit(ball);
     });
+  }
+
+  this.addPowerUp = function (originx, originy){
+    let rand = random();
+    if (rand > 0.1){
+      this.powerUps.push(new Powerup(originx , originy)); 
+    }
   }
 
 }
@@ -246,11 +259,13 @@ function Brick (x,y, durability){
     if ((in_bottom || in_top)  && (in_width)) {
       attacker.stepy *= -1;
       attacker.speed += 0.02;
+      board.addPowerUp(this.x + (this.width / 2), this.y + this.height);
     this.durability --;
     }
     else if ((in_left|| in_right) && (in_height)){
       attacker.stepx *= -1;
       attacker.speed += 0.02;
+      board.addPowerUp(this.x + (this.width / 2), this.y + this.height);
     this.durability --;
     }
     
@@ -293,8 +308,19 @@ function Brick (x,y, durability){
     rect (this.x, this.y, this.width, this.height);
   }
 }
-function Powerup(){
+function Powerup(originx, originy){
+  this.x = originx;
+  this.y = originy;
+  this.speed = 2;
 
+  this.drop = function(){
+    this.y += this.speed;
+  }
+
+  this.draw = function() {
+    fill("rgb(0,255,0)");
+    triangle(this.x, this.y, this.x - 10, this.y + 15, this.x + 10, this.y + 15);
+  }
   // falling object (triangle)
   // coloured
   // increase paddle size for a duration
