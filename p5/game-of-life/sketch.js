@@ -16,26 +16,46 @@ function setup() {
   let y = 20;
   frameRate(60);
 
+  board = new Board();
+  board.setup();
+
 }
 
 function draw() {
   // put drawing code here
   fill(20);
   background(230);
-  rect(x,y, 60, 60, 50);
-  text(x, 20, 20);
-  text(y, 20, 50);
-  if (y >= 400 -60 ){
-  stepy *=-1;
-  }else if (y <= 0){
-    stepy*=-1;
+
+  board.draw();
+
+}
+
+function Board (){
+  this.cells = [];
+
+  this.setup = function (){
+    for (let j = 0; j < 40; j ++ ){
+      for(let i = 0; i < 40; i ++ ){
+        this.cells.push(new Cell(i,j));
+      }
+    }
   }
-  if (x >= 400 - 60){
-  stepx *= -1;
-  }else if (x<=0){
-  stepx *= -1;
+
+  this.draw= function(){
+    this.cells.forEach(cell => cell.draw());
   }
-  y+= stepy;
-  x+=stepx;
+}
+
+function Cell (posX, posY){
+  this.size = 10;
+  this.x = posX * this.size;
+  this.y = posY * this.size;
+  this.colour = "rgb(50,50,50)";
+  this.alive = false;
+  
+  this.draw = function(){
+    fill(this.colour);
+    rect(this.x, this.y, this.size, this.size);
+  }
 
 }
