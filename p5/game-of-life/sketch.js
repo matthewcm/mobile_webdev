@@ -105,9 +105,12 @@ function Board (){
       cellRow.forEach(cell =>{
         if (cell.neighbors < 2){
           cell.alive = false;
-        }else if (cell.neighbors < 4){
+        }else if (cell.neighbors < 4 && cell.alive){
           cell.alive = true;
-        }else{
+        }else if (cell.neighbors === 3 && !cell.alive){
+          cell.alive = true;
+        
+        }else {
           cell.alive = false;
         }
       });
