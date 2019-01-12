@@ -102,7 +102,7 @@ paddle.deExpand();
       return;
     }
     // level one
-    for(let j =1 ; j < 4 ; j++){
+    for(let j = this.level ; j < 3 + this.level ; j++){
 
       for(let i = 50; i < 350; i += 50){
 
@@ -386,7 +386,7 @@ function Brick (x,y, durability){
 
         break;
       case 4:
-      this.colour = "rgb(55,55,255)";
+      this.colour = "rgb(55,255,255)";
         break;
       case 5:
       this.colour = "rgb(0,55,55)";
