@@ -44,6 +44,9 @@ function draw() {
   paddle.hit(ball);
   // also pass size of ball
 
+  board.checkPowersHit();
+  board.launchPowers();
+
   board.checkComplete();
 
 }
@@ -54,8 +57,24 @@ function Board (){
   this.level = 1;
   this.bricks = []; 
   this.powerUps = [];
-  this.activePowers = [];
-  this.activeTime = 0;
+  this.activePowers = {
+    "PADDLE_SIZE": {
+      active:false,
+      activated: false,
+      duration: 10,
+      timer: 0,
+      activatePower: function(){
+        this.activated = false;
+        this.active = true;
+paddle.expand();
+      },
+      expire: function(){
+        this.timer = 0;
+        this.active = false;
+paddle.deExpand();
+      }
+    }
+  };
   this.draw = function(){
     fill(198);
     rect(0,0,400,400);
@@ -83,27 +102,44 @@ function Board (){
     this.bricks.forEach(brick => {
       brick.draw();
     });
+  }
+
+  this.checkPowersHit = function(){
+
     let found = false;
     let index = 0;
     while(!found && index < this.powerUps.length){
-      this.powerUps[index].drop();
-      this.powerUps[index].draw();
-      if (paddle.hitPower(this.powerUps[index])){
+      let power = this.powerUps[index];
+      power.drop();
+      power.draw();
+      if (power.y + 10 >= 400){
+
+        this.powerUps.splice(index, 1);
+      }
+      if (paddle.hitPower(power)){
+        this.activePowers[power.power].activated = true;
+        this.powerUps.splice(index, 1);
+
         found = true;
       };
       index ++;
     }
-    this.activePowers.forEach(power => {
-      if (power === "PADDLE_SIZE" && this.activeTime > 0){
-        paddle.width = 120;
-        this.activeTime -= 0.02;
-      }
-      else {
-        paddle.width = 80;
-      }
-    })
   }
+  this.launchPowers = function(){
 
+    for (let index in this.activePowers){
+      let power = this.activePowers[index];
+      if (power.activated && !power.active){
+        power.activatePower();
+      }
+      if (power.active && power.timer < power.duration) {
+        power.timer += 0.02;
+      }
+      if (power.active && power.timer >= power.duration){
+        power.expire();
+      }
+    };
+  }
   this.checkComplete = function(){
     if (this.level >0){
 
@@ -131,7 +167,7 @@ function Board (){
 
   this.addPowerUp = function (originx, originy){
     let rand = random();
-    if (rand > 0.1){
+    if (rand > 0.9){
       this.powerUps.push(new Powerup(originx , originy)); 
     }
   }
@@ -172,7 +208,16 @@ function Paddle (){
     return (this.x );
   }
 
+  this.expand = function(){
+    this.width += 80;
+    this.y += 80;
 
+  }
+
+  this.deExpand = function(){
+    this.width -= 80;
+    this.y -= 80;
+  }
 
   this.draw = function (){
     fill (130);
@@ -210,10 +255,7 @@ function Paddle (){
     // calc angle of rebound
     if (dist <= c_dist){
 
-      board.activePowers.push(attacker.power);
-      board.activeTime = 10;
-      board.powerUps.splice(board.powerUps.indexOf(attacker), 1);
-      return true;
+            return true;
     }
     return false;
   }
