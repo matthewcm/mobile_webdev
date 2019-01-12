@@ -12,6 +12,7 @@ function setup() {
 
   timer =  35;
 
+         textSize(10);
   ticks = 0;
 
   board = new Board();
@@ -35,7 +36,6 @@ function draw() {
   ticks ++;
 
   fill(255);
-  text(ticks, 20, 150);
 
 }
 
@@ -65,8 +65,6 @@ function Board (){
         fill(255);
         if (this.cells[j][i].alive){
 
-        
-        text(this.cells[j][i].alive, 20, 300);
         }
         if ( j > 0 &&this.cells[j-1][i].alive ){
           neighbors ++;
@@ -92,9 +90,8 @@ function Board (){
         if ( j < 40 && i < 40 &&this.cells[j+1][i+1].alive ){
           neighbors ++;
         }
-        textSize(30);
-        text(neighbors, 20, 100);
-        textSize(10);
+        // textSize(30);
+        // text(neighbors, 20, 100);
         this.cells[j][i].neighbors = neighbors;
         
         // can do this at setup. saving who are neighbors in Cell for faster
@@ -142,8 +139,8 @@ function Cell (posX, posY){
       this.colour = "rgb(250,220,50)";
     }
 
-    fill("rgb(0,255,255)");
-    text(this.neighbors, this.x, this.y);
+    // fill("rgb(0,255,255)");
+    // text(this.neighbors, this.x, this.y);
     fill(this.colour);
     rect(this.x, this.y, this.size, this.size);
   }
