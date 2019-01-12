@@ -73,6 +73,22 @@ paddle.expand();
         this.active = false;
 paddle.deExpand();
       }
+    },
+    "BALL_SPEED": {
+      active:false,
+      activated: false,
+      duration: 5,
+      timer: 0,
+      activatePower: function(){
+        this.activated = false;
+        this.active = true;
+        ball.speed += 5;
+      },
+      expire: function(){
+        this.timer = 0;
+        this.active = false;
+        ball.speed -= 5;
+      }
     }
   };
   this.draw = function(){
@@ -393,14 +409,24 @@ function Powerup(originx, originy){
   this.y = originy;
   this.speed = 2;
   this.power = "PADDLE_SIZE";
+  this.colour = "rgb(0,255,0)";
 
   this.drop = function(){
     this.y += this.speed;
+    this.changePower();
   }
 
   this.draw = function() {
-    fill("rgb(0,255,0)");
+    fill(this.colour);
     triangle(this.x, this.y, this.x - 10, this.y + 15, this.x + 10, this.y + 15);
+  }
+
+  this.changePower = function (){
+    let rand = random();
+    if (rand > 0.6){
+      this.power = "BALL_SPEED";
+      this.colour = "rgb(255,50,50)";
+    }
   }
   // falling object (triangle)
   // coloured
