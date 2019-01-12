@@ -82,12 +82,12 @@ paddle.deExpand();
       activatePower: function(){
         this.activated = false;
         this.active = true;
-        ball.speed += 5;
+        ball.speed = 12;
       },
       expire: function(){
         this.timer = 0;
         this.active = false;
-        ball.speed -= 5;
+        ball.speed = 8;
       }
     }
   };
