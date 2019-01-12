@@ -410,6 +410,8 @@ function Powerup(originx, originy){
   this.speed = 2;
   this.power = "PADDLE_SIZE";
   this.colour = "rgb(0,255,0)";
+  this.changeInterval = 10;
+  this.tick = 0;
 
   this.drop = function(){
     this.y += this.speed;
@@ -422,10 +424,21 @@ function Powerup(originx, originy){
   }
 
   this.changePower = function (){
+    if (this.tick >= this.changeInterval){
+
     let rand = random();
     if (rand > 0.6){
       this.power = "BALL_SPEED";
       this.colour = "rgb(255,50,50)";
+    }
+    else {
+      this.power = "PADDLE_SIZE";
+  this.colour = "rgb(0,255,0)";
+    }
+      this.tick = 0;
+    }
+    else {
+      this.tick += 0.5;
     }
   }
   // falling object (triangle)
