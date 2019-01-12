@@ -54,6 +54,8 @@ function Board (){
   this.level = 1;
   this.bricks = []; 
   this.powerUps = [];
+  this.activePowers = [];
+  this.activeTime = 0;
   this.draw = function(){
     fill(198);
     rect(0,0,400,400);
@@ -81,10 +83,24 @@ function Board (){
     this.bricks.forEach(brick => {
       brick.draw();
     });
-
-    this.powerUps.forEach(power => {
-      power.drop();
-      power.draw();
+    let found = false;
+    let index = 0;
+    while(!found && index < this.powerUps.length){
+      this.powerUps[index].drop();
+      this.powerUps[index].draw();
+      if (paddle.hitPower(this.powerUps[index])){
+        found = true;
+      };
+      index ++;
+    }
+    this.activePowers.forEach(power => {
+      if (power === "PADDLE_SIZE" && this.activeTime > 0){
+        paddle.width = 120;
+        this.activeTime -= 0.02;
+      }
+      else {
+        paddle.width = 80;
+      }
     })
   }
 
@@ -178,6 +194,28 @@ function Paddle (){
     if (dist <= c_dist){
       attacker.bounce(atan(y_dist/x_dist), mag);
     }
+  }
+  this.hitPower= function (attacker){
+
+    let x_dist = abs(attacker.x - this.x);
+    let y_dist = abs(attacker.y - this.y);
+
+    let mag = (attacker.x - this.x)/x_dist;
+
+    let dist = sqrt(pow(x_dist , 2) + pow(y_dist ,2));
+
+    let c_dist = this.width + 15;
+
+    // if dist is greater than cdist. there is collision
+    // calc angle of rebound
+    if (dist <= c_dist){
+
+      board.activePowers.push(attacker.power);
+      board.activeTime = 10;
+      board.powerUps.splice(board.powerUps.indexOf(attacker), 1);
+      return true;
+    }
+    return false;
   }
 
 }
@@ -312,6 +350,7 @@ function Powerup(originx, originy){
   this.x = originx;
   this.y = originy;
   this.speed = 2;
+  this.power = "PADDLE_SIZE";
 
   this.drop = function(){
     this.y += this.speed;
