@@ -27,5 +27,10 @@ function Node(head, left, right){
     }
   }
 
+  this.draw = function (){
+
+    text(head, 200,0);
+  }
+
 
 }
